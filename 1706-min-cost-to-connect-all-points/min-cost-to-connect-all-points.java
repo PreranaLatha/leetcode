@@ -1,35 +1,29 @@
 class Solution {
     public int minCostConnectPoints(int[][] points) {
-        int n = points.length;
-        int[] visited = new int[n]; // Track included points
-        int[] minCost = new int[n]; // Min cost to connect each point
-        Arrays.fill(minCost, Integer.MAX_VALUE);
+       int n=points.length;
+       boolean[] visited=new boolean[n];
+       PriorityQueue<int[]> p=new PriorityQueue<>((a,b)->a[0]-b[0]);
 
-        int current = 0;
-        minCost[0] = 0;
-        int totalCost = 0;
+       p.offer(new int[]{0,0});
+       int totalCost=0,pointConnected=0;
 
-        while (current >= 0) {
-            visited[current] = 1;
-            int next = -1;
-            int minDistance = Integer.MAX_VALUE;
+       while(pointConnected<n){
+        int[] cur=p.poll();
+        int cost=cur[0],currentP=cur[1];
 
-            for (int i = 0; i < n; i++) {
-                if (visited[i] == 1) continue;
+        if(visited[currentP])continue;
+        visited[currentP]=true;
+        totalCost+=cost;
+        pointConnected++;
 
-                int cost = Math.abs(points[current][0] - points[i][0]) + Math.abs(points[current][1] - points[i][1]);
-                minCost[i] = Math.min(minCost[i], cost);
-
-                if (minCost[i] < minDistance) {
-                    minDistance = minCost[i];
-                    next = i;
-                }
+        for(int i=0;i<n;i++){
+            if(!visited[i]){
+                int distance=Math.abs(points[currentP][0]-points[i][0])+
+                            Math.abs(points[currentP][1]-points[i][1]);
+            p.offer(new int[]{distance,i});
             }
-
-            totalCost += (minDistance == Integer.MAX_VALUE) ? 0 : minDistance;
-            current = next;
         }
 
-        return totalCost;
+       }return totalCost;
     }
 }
