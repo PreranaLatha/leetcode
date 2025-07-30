@@ -1,16 +1,18 @@
 public class Codec {
 
+    private Map<Integer, String> map = new HashMap<>();
+    private static final String BASE_HOST = "http://tinyurl.com/";
+    private int id = 1;
+
     // Encodes a URL to a shortened URL.
     public String encode(String longUrl) {
-         return longUrl;
+        map.put(id, longUrl);
+        return BASE_HOST + id++;
     }
 
     // Decodes a shortened URL to its original URL.
     public String decode(String shortUrl) {
-        return shortUrl;
+        int key = Integer.parseInt(shortUrl.replace(BASE_HOST, ""));
+        return map.get(key);
     }
 }
-
-// Your Codec object will be instantiated and called as such:
-// Codec codec = new Codec();
-// codec.decode(codec.encode(url));
