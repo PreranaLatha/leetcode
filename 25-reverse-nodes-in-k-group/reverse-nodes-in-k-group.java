@@ -10,37 +10,36 @@
  */
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
-       ListNode dummy = new ListNode(0, head);
-        ListNode groupPrev = dummy;
+         ListNode ptr=head;
+         ListNode tail=null;
+         ListNode newHead=null;
 
-        while (true) {
-            ListNode kth = getKth(groupPrev, k);
-            if (kth == null) {
-                break;
+         while(ptr!=null){
+            ptr=head;
+            int count=0;
+            while(ptr!=null && count<k){
+                ptr=ptr.next;
+                count++;
             }
-            ListNode groupNext = kth.next;
-
-            ListNode prev = kth.next;
-            ListNode curr = groupPrev.next;
-            while (curr != groupNext) {
-                ListNode tmp = curr.next;
-                curr.next = prev;
-                prev = curr;
-                curr = tmp;
+            if(count==k){
+                ListNode revHead=reverseLinkedList(head,k);
+                if(newHead==null)newHead=revHead;
+                if(tail!=null)tail.next=revHead;
+                tail=head;
+                head=ptr;
             }
-
-            ListNode tmp = groupPrev.next;
-            groupPrev.next = kth;
-            groupPrev = tmp;
-        }
-        return dummy.next;
+         }if(tail!=null)tail.next=head;
+         return newHead==null?head:newHead;
     }
-
-    private ListNode getKth(ListNode curr, int k) {
-        while (curr != null && k > 0) {
-            curr = curr.next;
+    private ListNode reverseLinkedList(ListNode head,int k){
+        ListNode newHead=null;
+        ListNode ptr=head;
+        while(k>0){
+            ListNode temp=ptr.next;
+            ptr.next=newHead;
+            newHead=ptr;
+            ptr=temp;
             k--;
-        }
-        return curr;
+        }return newHead;
     }
 }
