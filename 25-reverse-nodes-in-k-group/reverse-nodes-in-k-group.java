@@ -10,60 +10,43 @@
  */
 class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
-       
-        ListNode ptr = head;
-        ListNode ktail = null;
-        ListNode newHead = null;
-        
-        while(ptr != null){
-            int count = 0;
-            ptr = head;
+        if (head == null || k == 1) return head;
+
+        ListNode dummy = new ListNode(0, head);
+        ListNode curr = dummy;
+
+        while (true) {
             
-            while(count<k && ptr!= null){
-                ptr=ptr.next;
+            ListNode temp = curr;
+            int count = 0;
+            while (count < k && temp.next != null) {
+                temp = temp.next;
                 count++;
             }
-            if(count == k){
-                ListNode revHead = reverseLinkedList(head,k);
-                
-                if(newHead == null){
-                    newHead = revHead;
-                }
-                
-                if(ktail != null){
-                    ktail.next = revHead;
-                }
-                
-                ktail = head;
-                head = ptr;
+            if (count < k) break; 
+
+           
+            ListNode beforeRev = curr;
+            ListNode current = curr.next;
+            ListNode prev = null;
+            ListNode next = null;
+
+            count = 0;
+            while (count < k) {
+                next = current.next;
+                current.next = prev;
+                prev = current;
+                current = next;
+                count++;
             }
+
+            ListNode tail = beforeRev.next; 
+            beforeRev.next = prev;
+            tail.next = current;
+
+            curr = tail;
         }
-        
-        if(ktail != null){
-            ktail.next = head;
-        }
-        
-        return newHead == null ? head:newHead;
-        
-    }
-    
-    public ListNode reverseLinkedList(ListNode head, int k){
-        
-        ListNode newHead = null;
-        ListNode ptr = head;
-        
-        while(k>0){
-            
-            ListNode nextNode = ptr.next;
-            ptr.next = newHead;
-            newHead = ptr;
-            ptr = nextNode;
-            
-            k--;
-            
-        }
-        
-        return newHead;
-        
+
+        return dummy.next;
     }
 }
